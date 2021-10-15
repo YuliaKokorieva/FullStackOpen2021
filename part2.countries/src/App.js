@@ -37,7 +37,7 @@ const ShowCountry = ({searchRes}) => {
   if (searchRes.length===0) {
     return (
       <div>
-        <p>No countries found, try another filter</p>
+        <p>No countries found, specify another filter</p>
       </div>
     )
   } else if (searchRes.length > 10) {

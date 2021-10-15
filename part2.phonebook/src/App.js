@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Search = (props) => {
   return (
@@ -23,13 +23,48 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = ({persons, searchTerm}) => {
+const Persons = ({persons, searchTerm, deletePerson}) => {
   return (
     <ul>
     {searchTerm !== '' ?
-      persons.filter(person=>person.name.toLowerCase().includes(searchTerm.toLowerCase())).map(person =><li key={person.id}>{person.name} {person.number}</li>)
-      : persons.map(person =><li key={person.id}>{person.name} {person.number}</li>)}
+      persons.filter(person=>person.name.toLowerCase().includes(searchTerm.toLowerCase())).map(person =><li key={person.id}>{person.name} {person.number}<button onClick = {()=>deletePerson(person.id)}>Delete</button></li>)
+      : persons.map(person =><li key={person.id}>{person.name} {person.number}<button onClick = {()=>deletePerson(person.id)}>Delete</button></li>)}
   </ul>
+  )
+}
+
+const Notification = ({ message }) => {
+  const notificationStyle = {
+    color: 'green',
+    fontSize: '20px',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+const ErrorNotification = ({ errorMessage }) => {
+  const notificationStyle = {
+    color: 'red',
+    fontSize: '20px',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+  if (errorMessage === null) {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {errorMessage}
+    </div>
   )
 }
 
@@ -40,25 +75,82 @@ const App = () => {
     number: ''
   })
   const [searchTerm, setSearchTerm] = useState('')
+  const [message, setMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(()=>{
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response=> {
-        setPersons(response.data)
-      })
+    personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
     const names = persons.map(person => person.name)
     if (names.includes(newPerson.name)) {
-           alert(`${newPerson.name} already exists!`)
+      window.confirm(`${newPerson.name} already exists! 
+        Do you want to replace the number with the new one?`)
+        const personObject = {
+        name: newPerson.name,
+        number: newPerson.number
+      }
+
+      personService
+      .update(persons.filter(p=>p.name===newPerson.name)[0].id, personObject)
+      .then(
+        returnedPerson => {
+        setPersons(
+          persons.filter(p=>p.id!==persons.filter(p=>p.name===newPerson.name)[0].id)
+          .concat(returnedPerson)
+        )
+        setMessage(`${returnedPerson.name} modified`)
+        setTimeout (()=> {
+          setMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setErrorMessage(`${persons.filter(p=>p.name===newPerson.name)[0].name} has already beed removed`)
+        setTimeout (()=> {
+          setErrorMessage(null)
+        }, 5000)
+        personService
+        .getAll()
+        .then(initialPersons => {
+          setPersons(initialPersons)
+        })
+      })
+
     } else {
-      setPersons(persons.concat({name:newPerson.name, number: newPerson.number, id: persons.length+1}))
-      setNewPerson({name: '', number: '', id: 0})
+      const personObject = {
+        name: newPerson.name,
+        number: newPerson.number
+      }
+
+      personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setMessage(`${returnedPerson.name} added`)
+        setTimeout (()=> {
+          setMessage(null)
+        }, 5000)
+      })
     }
   }
+
+  const deletePerson = (id) => {
+    window.confirm(`Delete '${persons.filter(p=>p.id===id)[0].name}'?`)
+    personService
+    .deleteAxios(id)
+    .then(
+      setPersons(persons.filter(p=>p.id!==id)),
+      setMessage(`Deleted`),
+      setTimeout (()=> {
+        setMessage(null)
+      }, 5000)
+    )}
 
   const inputChanged = (event) => {
         setNewPerson({...newPerson, [event.target.name]: event.target.value })
@@ -75,10 +167,20 @@ const App = () => {
       <Search searchTerm = {searchTerm} searchTermChanged={searchTermChanged}/>
 
       <h3>Add a new contact</h3>
-      <PersonForm inputChanged = {inputChanged} addPerson = {addPerson} newPerson = {newPerson}/>
+      <PersonForm 
+        inputChanged = {inputChanged} 
+        addPerson = {addPerson} 
+        newPerson = {newPerson} 
+      />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} searchTerm={searchTerm}/>
+      <Persons 
+        persons={persons} 
+        searchTerm={searchTerm}
+        deletePerson = {deletePerson}
+      />
+      <Notification message={message}/>
+      <ErrorNotification errorMessage={errorMessage}/>
     </div>
   )
 }
