@@ -111,6 +111,13 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
+        if (error.response.data.error.includes('Validation')) {
+        console.log(error.response.data.error)
+        setErrorMessage(error.response.data.error)
+        setTimeout (()=> {
+          setErrorMessage(null)
+        }, 5000)
+      } else{
         setErrorMessage(`${persons.filter(p=>p.name===newPerson.name)[0].name} has already beed removed`)
         setTimeout (()=> {
           setErrorMessage(null)
@@ -120,6 +127,7 @@ const App = () => {
         .then(initialPersons => {
           setPersons(initialPersons)
         })
+      }
       })
 
     } else {
@@ -131,10 +139,18 @@ const App = () => {
       personService
       .create(personObject)
       .then(returnedPerson => {
+        console.log(returnedPerson)
         setPersons(persons.concat(returnedPerson))
         setMessage(`${returnedPerson.name} added`)
         setTimeout (()=> {
           setMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        console.log(error.response.data.error)
+        setErrorMessage(error.response.data.error)
+        setTimeout (()=> {
+          setErrorMessage(null)
         }, 5000)
       })
     }
