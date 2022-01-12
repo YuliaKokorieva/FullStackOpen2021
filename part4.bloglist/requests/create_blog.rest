@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ill1bGlhIiwiaWQiOiI2MWRjNGIxYjJiODdlMTc3MDZiOTRiOGQiLCJpYXQiOjE2NDE5NzQ2NTF9.nLRtufSCxyYlCDeNxNT3mx_o0RJJIC7yzBAQ8eiW6P4
 
 {
-    "title": "new4",
+    "title": "Authorised post",
     "author": "new author",
     "url": "URL",
-    "likes": "15"
+    "likes": "10"
 }
