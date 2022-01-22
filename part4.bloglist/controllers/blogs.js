@@ -28,11 +28,6 @@ blogsRouter.post('/', async (request, response, next) => {
     })  
   }  
 
-
-  if (body.title === undefined) {
-    return response.status(400).json({error: 'title missing'})
-
-  }
   const blog = new Blog({
     title: body.title,
     author: body.author,
