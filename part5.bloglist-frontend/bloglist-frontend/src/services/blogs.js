@@ -10,14 +10,36 @@ const create = async newObject => {
   const config = {
     headers: {Authorization : token}
   }
-
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+const update = async (updatedObject) => {
+  const config = {
+    headers: {Authorization : token}
+  }
+  const response = await axios.put(`http://localhost:3003/api/blogs/${updatedObject.id}`, updatedObject, config)
+  return response.data
 }
 
-export default { getAll, create, setToken }
+const remove = async(id) => {
+  const config = {
+    headers: {Authorization : token}
+  }
+  const response = await axios.delete(`http://localhost:3003/api/blogs/${id}`,config)
+  return response.data
+}
+
+const getAll = async () => {
+  const request = axios.get(baseUrl)
+  const response = await request
+  return response.data
+}
+
+const blogService={
+  getAll, create, setToken, update, remove
+}
+
+
+
+export default blogService
