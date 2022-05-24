@@ -38,6 +38,7 @@ const BlogForm = ({createBlog}) => {
                 type="text" 
                 value = {newBlog.title} 
                 onChange={inputChanged}
+                placeholder="title"
                 />
               </td>
             </tr>
@@ -49,6 +50,7 @@ const BlogForm = ({createBlog}) => {
                   type="text" 
                   value = {newBlog.author} 
                   onChange={inputChanged}
+                  placeholder="author"
                   />
               </td>
             </tr>
@@ -58,7 +60,9 @@ const BlogForm = ({createBlog}) => {
                 name="url" 
                 type="text" 
                 value = {newBlog.url} 
-                onChange={inputChanged}/>
+                onChange={inputChanged}
+                placeholder="url"                
+              />
               </td>
             </tr>
             <tr>
