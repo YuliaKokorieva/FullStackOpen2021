@@ -21,7 +21,7 @@ const Blog = ({blog, loginuser, addLike, removeBlog}) => {
           <p>{blog.url}</p>
           <div>likes:{blog.likes}<button onClick={()=>addLike(blog)} id='likeButton'>like</button></div>
           {(loginuser.id===blog.user.id || loginuser.id===blog.user)
-            ? <div><button onClick={()=>removeBlog(blog)}>remove</button></div>
+            ? <div><button onClick={()=>removeBlog(blog)} id="remove-button">remove</button></div>
             : null
           }
 

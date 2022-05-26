@@ -73,6 +73,8 @@ test('<Note /> : like button pressed twice calls the event handler twice', async
 
   expect(mockHandler.mock.calls).toHaveLength(2)
 
-  })
+})
+
+
 
 
