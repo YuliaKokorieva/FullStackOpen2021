@@ -1,16 +1,21 @@
 import { useState } from 'react'
 import {
-  BrowserRouter as Router,
-  Routes, Route, Link, useParams, useNavigate
+  Routes, Route, Link, useNavigate, useMatch
 } from "react-router-dom"
 
 const Menu = ({addNew, anecdotes, setNotification}) => {
+
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match
+    ? anecdotes.find(an => an.id===Number(match.params.id))
+    : null
+
   const padding = {
     paddingRight: 5
   }
   return (
     <div>
-      <Router>
+
         <div>
           <Link style={padding} to="/">anecdotes</Link>
           <Link style={padding} to="create">create new</Link>
@@ -18,13 +23,13 @@ const Menu = ({addNew, anecdotes, setNotification}) => {
         </div>
 
           <Routes>
-            <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
+            <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
             <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
             <Route path="/create" element={<CreateNew addNew={addNew} setNotification = {setNotification}/>} />
             <Route path="/about" element={<About />} />
           </Routes>
 
-        </Router>
+
     </div>
   )
 }
@@ -63,9 +68,9 @@ const Footer = () => (
   </div>
 )
 
-const Anecdote =({anecdotes}) => {
-  const id = useParams().id
-  const anecdote = anecdotes.find(a=>a.id===Number(id))
+const Anecdote =({anecdote}) => {
+  // const id = useParams().id
+  // const anecdote = anecdotes.find(a=>a.id===Number(id))
   return(
     <div>
       <h2>{anecdote.content}</h2>
