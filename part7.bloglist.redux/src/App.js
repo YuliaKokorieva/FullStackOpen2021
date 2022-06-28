@@ -9,22 +9,24 @@ import BlogForm from "./components/BlogForm";
 import { setNotification } from "./reducers/notificationReducer";
 import { useSelector, useDispatch } from 'react-redux'
 import { setVisible, setInvisible } from "./reducers/visibleReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
+import store from "./store";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  // const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const blogFormRef = useRef();
   const dispatch = useDispatch()
 
   const visible = useSelector(state=>state.visible)
+  const blogs = useSelector(state=>state.blogs).slice().sort((a, b) => b.likes - a.likes)
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+  useEffect(()=> {
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistappUser");
@@ -78,26 +80,6 @@ const App = () => {
     }
   };
 
-  const addBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility();
-    try {
-      const returnedBlog = await blogService.create(blogObject);
-      setBlogs([...blogs, returnedBlog]);
-      dispatch(setNotification(`a new blog "${blogObject.title}" by ${blogObject.author} added successfully`))
-
-      dispatch(setVisible())
-      setTimeout(()=> {
-        dispatch(setInvisible())
-      }, 3000)
-    } catch (error) {
-      dispatch(setNotification("not saved, error: " + error.message));
-      dispatch(setVisible())
-      setTimeout(()=> {
-        dispatch(setInvisible())
-      }, 3000)
-    }
-  };
-
   const addLike = (blog) => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
     blogService
@@ -138,7 +120,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm  />
     </Togglable>
   );
 
@@ -153,16 +135,15 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <p>
+          <span>
             {user.name} logged-in
             <form onSubmit={() => window.localStorage.clear("")}>
               <button type="submit">logout</button>
             </form>
-          </p>
+          </span>
           {blogForm()}
           <h3>List of blogs</h3>
           {blogs
-            .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
               <Blog
                 key={blog.id}

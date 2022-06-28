@@ -17,7 +17,8 @@ const Blog = ({ blog, loginuser, addLike, removeBlog }) => {
       <button onClick={() => setInfoVisible(!infoVisible)} id="viewButton">
         view
       </button>
-      {infoVisible ? (
+      {infoVisible 
+      ? (
         <div>
           <p>{blog.url}</p>
           <div>
@@ -32,7 +33,8 @@ const Blog = ({ blog, loginuser, addLike, removeBlog }) => {
                 remove
               </button>
             </div>
-          ) : null}
+          ) 
+          : null}
         </div>
       ) : null}
     </div>

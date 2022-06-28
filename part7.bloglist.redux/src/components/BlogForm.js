@@ -1,6 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch } from 'react-redux'
+import { setNotification } from "../reducers/notificationReducer";
+import { setVisible, setInvisible } from "../reducers/visibleReducer";
+import { createBlog } from "../reducers/blogReducer";
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = () => {
+
+  const dispatch = useDispatch()
+
   const [newBlog, setNewBlog] = useState({
     title: "",
     author: "",
@@ -12,16 +19,26 @@ const BlogForm = ({ createBlog }) => {
     setNewBlog({ ...newBlog, [event.target.name]: event.target.value });
   };
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    createBlog(newBlog);
-    setNewBlog({
-      title: "",
-      author: "",
-      url: "",
-      likes: 0,
-    });
-  };
+  const addBlog = async (event) => {
+    event.preventDefault()
+
+    try {
+      dispatch(createBlog(newBlog))
+      dispatch(setNotification(
+        `a new blog "${newBlog.title}" by ${newBlog.author} added successfully`
+      ))
+      dispatch(setVisible())
+      setTimeout(()=> {
+        dispatch(setInvisible())
+      }, 3000)
+    } catch (error) {
+      dispatch(setNotification("not saved, error: " + error.message));
+      dispatch(setVisible())
+      setTimeout(()=> {
+        dispatch(setInvisible())
+      }, 3000)
+    }
+  }
 
   return (
     <div>
