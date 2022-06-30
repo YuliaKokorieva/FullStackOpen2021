@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 import { setNotificationTimeout } from "../reducers/notificationReducer";
 import { createBlog } from "../reducers/blogReducer";
 
 const BlogForm = () => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [newBlog, setNewBlog] = useState({
     title: "",
@@ -19,17 +18,22 @@ const BlogForm = () => {
   };
 
   const addBlog = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
-      dispatch(createBlog(newBlog))
-      dispatch(setNotificationTimeout(
-        `a new blog "${newBlog.title}" by ${newBlog.author} added successfully`, 3
-      ))
+      dispatch(createBlog(newBlog));
+      dispatch(
+        setNotificationTimeout(
+          `a new blog "${newBlog.title}" by ${newBlog.author} added successfully`,
+          3
+        )
+      );
     } catch (error) {
-      dispatch(setNotificationTimeout(`"not saved, error: ${error.message}`, 3));
+      dispatch(
+        setNotificationTimeout(`"not saved, error: ${error.message}`, 3)
+      );
     }
-  }
+  };
 
   return (
     <div>

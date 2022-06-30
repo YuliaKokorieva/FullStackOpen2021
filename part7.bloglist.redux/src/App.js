@@ -6,10 +6,10 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
-import { setNotification } from "./reducers/notificationReducer";
-import { useSelector, useDispatch } from 'react-redux'
-import { setVisible, setInvisible } from "./reducers/visibleReducer";
+import { setNotificationTimeout } from "./reducers/notificationReducer";
+import { useSelector, useDispatch } from "react-redux";
 import { initializeBlogs } from "./reducers/blogReducer";
+import { setUserRedux } from "./reducers/loginReducer";
 import store from "./store";
 
 const App = () => {
@@ -18,14 +18,16 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const visible = useSelector(state=>state.visible)
-  const blogs = useSelector(state=>state.blogs).slice().sort((a, b) => b.likes - a.likes)
+  const visible = useSelector((state) => state.visible);
+  const blogs = useSelector((state) => state.blogs)
+    .slice()
+    .sort((a, b) => b.likes - a.likes);
 
-  useEffect(()=> {
-    dispatch(initializeBlogs())
-  }, [dispatch])
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistappUser");
@@ -70,27 +72,23 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      dispatch(setUserRedux(user));
+      console.log(store.getState());
     } catch (exception) {
-      dispatch(setNotification("wrong credentials"));
-      dispatch(setVisible())
-      setTimeout(()=> {
-        dispatch(setInvisible())
-      }, 3000)
+      dispatch(setNotificationTimeout("wrong credentials", 3));
     }
   };
 
   const blogForm = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm  />
+      <BlogForm />
     </Togglable>
   );
 
   return (
     <div>
       <h2>Bloglist App</h2>
-      {visible
-        ?<Notification/>
-        : null}
+      {visible ? <Notification /> : null}
 
       {user === null ? (
         loginForm()
@@ -104,14 +102,9 @@ const App = () => {
           </span>
           {blogForm()}
           <h3>List of blogs</h3>
-          {blogs
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                loginuser={user}
-              />
-            ))}
+          {blogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
         </div>
       )}
     </div>

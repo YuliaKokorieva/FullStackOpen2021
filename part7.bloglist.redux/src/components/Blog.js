@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import { addLikeBE, removeBlogBE } from "../reducers/blogReducer";
 import { setNotificationTimeout } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, loginuser }) => {
-
-  const dispatch = useDispatch()
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch();
 
   const [infoVisible, setInfoVisible] = useState(false);
 
@@ -17,28 +16,39 @@ const Blog = ({ blog, loginuser }) => {
     marginBottom: 5,
   };
 
+  const loginuser = useSelector((state) => state.loginuser);
+
   const addLike = (blog) => {
     try {
-      dispatch(addLikeBE(blog))
-      dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3))
+      dispatch(addLikeBE(blog));
+      dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3));
     } catch (error) {
-      dispatch(setNotificationTimeout(`Couldn't add like for "${blog.title}": ${error}`, 3))
+      dispatch(
+        setNotificationTimeout(
+          `Couldn't add like for "${blog.title}": ${error}`,
+          3
+        )
+      );
     }
-    
-  }
+  };
 
   const removeBlog = (blogToRemove) => {
     if (window.confirm(`Delete ${blogToRemove.title}?`)) {
-      try{
-        dispatch(removeBlogBE(blogToRemove))
-        dispatch(setNotificationTimeout(`You deleted "${blogToRemove.title}"`, 3))
+      try {
+        dispatch(removeBlogBE(blogToRemove));
+        dispatch(
+          setNotificationTimeout(`You deleted "${blogToRemove.title}"`, 3)
+        );
       } catch (error) {
-        dispatch(setNotificationTimeout(`Couldn't delete "${blogToRemove.title}": ${error}`, 3))
-
-      }     
+        dispatch(
+          setNotificationTimeout(
+            `Couldn't delete "${blogToRemove.title}": ${error}`,
+            3
+          )
+        );
+      }
     }
-
-  }
+  };
 
   return (
     <div style={blogStyle} className="blog">
@@ -46,8 +56,7 @@ const Blog = ({ blog, loginuser }) => {
       <button onClick={() => setInfoVisible(!infoVisible)} id="viewButton">
         view
       </button>
-      {infoVisible 
-      ? (
+      {infoVisible ? (
         <div>
           <p>{blog.url}</p>
           <div>
@@ -62,8 +71,7 @@ const Blog = ({ blog, loginuser }) => {
                 remove
               </button>
             </div>
-          ) 
-          : null}
+          ) : null}
         </div>
       ) : null}
     </div>

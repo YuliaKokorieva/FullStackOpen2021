@@ -19,8 +19,9 @@ const update = async (blogToUpdate) => {
     headers: { Authorization: token },
   };
   const updatedBlog = {
-    ...blogToUpdate, likes: blogToUpdate.likes+1
-  }
+    ...blogToUpdate,
+    likes: blogToUpdate.likes + 1,
+  };
   const response = await axios.put(
     `http://localhost:3003/api/blogs/${updatedBlog.id}`,
     updatedBlog,
@@ -45,7 +46,6 @@ const getAll = async () => {
   const response = await request;
   return response.data;
 };
-
 
 const blogService = {
   getAll,
