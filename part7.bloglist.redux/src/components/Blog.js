@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { addLikeBE } from "../reducers/blogReducer";
+import { addLikeBE, removeBlogBE } from "../reducers/blogReducer";
 import { setNotificationTimeout } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, loginuser, removeBlog }) => {
-
+const Blog = ({ blog, loginuser }) => {
   const dispatch = useDispatch()
-
   const [infoVisible, setInfoVisible] = useState(false);
 
   const blogStyle = {
@@ -22,9 +20,13 @@ const Blog = ({ blog, loginuser, removeBlog }) => {
     dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3))
   }
 
-  
+  const removeBlog = (blogToRemove) => {
+    if (window.confirm(`Delete ${blogToRemove.title}?`)) {
+      dispatch(removeBlogBE(blogToRemove))
+      dispatch(setNotificationTimeout(`You deleted "${blogToRemove.title}"`, 3))
+    }
 
-  
+  }
 
   return (
     <div style={blogStyle} className="blog">

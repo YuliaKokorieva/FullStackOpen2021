@@ -14,13 +14,16 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const update = async (updatedObject) => {
+const update = async (blogToUpdate) => {
   const config = {
     headers: { Authorization: token },
   };
+  const updatedBlog = {
+    ...blogToUpdate, likes: blogToUpdate.likes+1
+  }
   const response = await axios.put(
-    `http://localhost:3003/api/blogs/${updatedObject.id}`,
-    updatedObject,
+    `http://localhost:3003/api/blogs/${updatedBlog.id}`,
+    updatedBlog,
     config
   );
   return response.data;
