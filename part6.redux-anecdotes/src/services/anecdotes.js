@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/anecdotes'
+const baseUrl = 'http://localhost:4000/anecdotes'
 
 const getAll = async () => {
   const response = await axios.get(baseUrl)
@@ -21,5 +21,6 @@ const addVoteService = async (anecdoteToChange) => {
   return response.data
 }
 
+const exportedObject = { getAll, createNew, addVoteService }
 
-export default { getAll, createNew, addVoteService }
+export default exportedObject
