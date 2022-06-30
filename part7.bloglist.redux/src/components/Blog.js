@@ -4,7 +4,9 @@ import { addLikeBE, removeBlogBE } from "../reducers/blogReducer";
 import { setNotificationTimeout } from "../reducers/notificationReducer";
 
 const Blog = ({ blog, loginuser }) => {
+
   const dispatch = useDispatch()
+
   const [infoVisible, setInfoVisible] = useState(false);
 
   const blogStyle = {

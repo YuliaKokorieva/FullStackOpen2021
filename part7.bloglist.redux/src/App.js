@@ -13,7 +13,6 @@ import { initializeBlogs } from "./reducers/blogReducer";
 import store from "./store";
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -133,8 +132,6 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 loginuser={user}
-                // addLike={addLike}
-                // removeBlog={removeBlog}
               />
             ))}
         </div>
