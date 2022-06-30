@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux'
+import { addLikeBE } from "../reducers/blogReducer";
+import { setNotificationTimeout } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, loginuser, addLike, removeBlog }) => {
+const Blog = ({ blog, loginuser, removeBlog }) => {
+
+  const dispatch = useDispatch()
+
   const [infoVisible, setInfoVisible] = useState(false);
 
   const blogStyle = {
@@ -10,6 +16,15 @@ const Blog = ({ blog, loginuser, addLike, removeBlog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
+  const addLike = (blog) => {
+    dispatch(addLikeBE(blog))
+    dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3))
+  }
+
+  
+
+  
 
   return (
     <div style={blogStyle} className="blog">

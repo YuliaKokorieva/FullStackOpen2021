@@ -80,22 +80,6 @@ const App = () => {
     }
   };
 
-  const addLike = (blog) => {
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    blogService
-      .update(updatedBlog)
-      .then((returnedBlog) => {
-        setBlogs(
-          blogs.map((blog) =>
-            blog.id !== updatedBlog.id ? blog : returnedBlog
-          )
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   const removeBlog = (blogToRemove) => {
     if (window.confirm(`Delete ${blogToRemove.title}?`)) {
       blogService
@@ -149,7 +133,7 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 loginuser={user}
-                addLike={addLike}
+                // addLike={addLike}
                 removeBlog={removeBlog}
               />
             ))}
