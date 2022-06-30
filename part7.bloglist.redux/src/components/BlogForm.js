@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux'
-import { setNotification } from "../reducers/notificationReducer";
-import { setVisible, setInvisible } from "../reducers/visibleReducer";
+import { setNotificationTimeout } from "../reducers/notificationReducer";
 import { createBlog } from "../reducers/blogReducer";
 
 const BlogForm = () => {
@@ -24,19 +23,11 @@ const BlogForm = () => {
 
     try {
       dispatch(createBlog(newBlog))
-      dispatch(setNotification(
-        `a new blog "${newBlog.title}" by ${newBlog.author} added successfully`
+      dispatch(setNotificationTimeout(
+        `a new blog "${newBlog.title}" by ${newBlog.author} added successfully`, 3
       ))
-      dispatch(setVisible())
-      setTimeout(()=> {
-        dispatch(setInvisible())
-      }, 3000)
     } catch (error) {
-      dispatch(setNotification("not saved, error: " + error.message));
-      dispatch(setVisible())
-      setTimeout(()=> {
-        dispatch(setInvisible())
-      }, 3000)
+      dispatch(setNotificationTimeout(`"not saved, error: ${error.message}`, 3));
     }
   }
 

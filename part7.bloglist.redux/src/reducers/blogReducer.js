@@ -58,8 +58,10 @@ export const addLikeBE = blog => {
   }
 }
 
-export const removeBlogBE = blog => {
+export const removeBlogBE = blogToDelete => {
   return async dispatch => {
+    blogService.remove(blogToDelete.id)
+    dispatch(removeBlog(blogToDelete.id))
 
   }
 

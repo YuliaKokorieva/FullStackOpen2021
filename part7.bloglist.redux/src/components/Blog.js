@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { addLikeBE, removeBlogBE } from "../reducers/blogReducer";
 import { setNotificationTimeout } from "../reducers/notificationReducer";
 
@@ -18,14 +18,24 @@ const Blog = ({ blog, loginuser }) => {
   };
 
   const addLike = (blog) => {
-    dispatch(addLikeBE(blog))
-    dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3))
+    try {
+      dispatch(addLikeBE(blog))
+      dispatch(setNotificationTimeout(`You liked "${blog.title}"`, 3))
+    } catch (error) {
+      dispatch(setNotificationTimeout(`Couldn't add like for "${blog.title}": ${error}`, 3))
+    }
+    
   }
 
   const removeBlog = (blogToRemove) => {
     if (window.confirm(`Delete ${blogToRemove.title}?`)) {
-      dispatch(removeBlogBE(blogToRemove))
-      dispatch(setNotificationTimeout(`You deleted "${blogToRemove.title}"`, 3))
+      try{
+        dispatch(removeBlogBE(blogToRemove))
+        dispatch(setNotificationTimeout(`You deleted "${blogToRemove.title}"`, 3))
+      } catch (error) {
+        dispatch(setNotificationTimeout(`Couldn't delete "${blogToRemove.title}": ${error}`, 3))
+
+      }     
     }
 
   }

@@ -79,28 +79,6 @@ const App = () => {
     }
   };
 
-  const removeBlog = (blogToRemove) => {
-    if (window.confirm(`Delete ${blogToRemove.title}?`)) {
-      blogService
-        .remove(blogToRemove.id)
-        .then(() => {
-          setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id));
-          dispatch(setNotification(`${blogToRemove.title} deleted`));
-          dispatch(setVisible())
-          setTimeout(()=> {
-            dispatch(setInvisible())
-          }, 3000)
-        })
-        .catch((error) => {
-          dispatch(setNotification("deletetion didnt succeed"));
-          dispatch(setVisible())
-          setTimeout(()=> {
-            dispatch(setInvisible())
-          }, 3000)
-        });
-    }
-  };
-
   const blogForm = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
       <BlogForm  />
