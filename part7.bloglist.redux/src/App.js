@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
+import React, { useState, useEffect } from "react";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
-import BlogForm from "./components/BlogForm";
+import Menu from "./components/Menu";
 import { setNotificationTimeout } from "./reducers/notificationReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setUserRedux } from "./reducers/loginReducer";
+import blogService from "./services/blogs";
+import loginService from "./services/login";
 import store from "./store";
 
 const App = () => {
@@ -17,13 +16,13 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const blogFormRef = useRef();
   const dispatch = useDispatch();
 
   const visible = useSelector((state) => state.visible);
   const blogs = useSelector((state) => state.blogs)
     .slice()
     .sort((a, b) => b.likes - a.likes);
+
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -79,34 +78,12 @@ const App = () => {
     }
   };
 
-  const blogForm = () => (
-    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm />
-    </Togglable>
-  );
-
   return (
     <div>
       <h2>Bloglist App</h2>
       {visible ? <Notification /> : null}
+      <Menu blogs = {blogs} loginuser = {user} loginForm = {loginForm}/>
 
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
-          <span>
-            {user.name} logged-in
-            <form onSubmit={() => window.localStorage.clear("")}>
-              <button type="submit">logout</button>
-            </form>
-          </span>
-          {blogForm()}
-          <h3>List of blogs</h3>
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
-        </div>
-      )}
     </div>
   );
 };
