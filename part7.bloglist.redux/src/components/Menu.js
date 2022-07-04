@@ -7,6 +7,7 @@ import { initializeUsers } from "../reducers/usersReducer";
 import BlogList from "./BlogList"
 import Users from "./Users"
 import User from "./User";
+import Blog from "./Blog";
 
 const Menu = ({blogs, loginuser, loginForm}) => {
 
@@ -17,9 +18,14 @@ const Menu = ({blogs, loginuser, loginForm}) => {
     dispatch(initializeUsers())
   }, [dispatch])
 
-  const match = useMatch('/users/:id')
-  const userpage = match
-    ? users.find(u=>u.id===match.params.id)
+  const matchUser = useMatch('/users/:id')
+  const userpage = matchUser
+    ? users.find(u=>u.id===matchUser.params.id)
+    : null
+  
+  const matchBlog = useMatch('/blogs/:id')
+  const blog = matchBlog
+    ? blogs.find(blog=>blog.id===matchBlog.params.id)
     : null
 
   const padding = {
@@ -46,6 +52,7 @@ const Menu = ({blogs, loginuser, loginForm}) => {
       </div>
       <Routes>
         <Route path = "/users/:id" element = {<User user={userpage}/>}/>
+        <Route path="/blogs/:id" element={<Blog blog={blog} />}/>
         <Route path="/" element = {loginuser===null? null: <BlogList blogs = {blogs}/>}/>
         <Route path="/users" element = {<Users />}/>
       </Routes>

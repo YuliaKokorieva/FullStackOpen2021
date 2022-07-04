@@ -2,6 +2,7 @@ import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
 import React, { useRef } from "react";
+import { Link } from "react-router-dom"
 
 const BlogList = ({blogs}) => {
 
@@ -18,7 +19,7 @@ const BlogList = ({blogs}) => {
 
       <h2>List of blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <p key={blog.id}><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></p>
       ))}
       {blogForm()}
 
